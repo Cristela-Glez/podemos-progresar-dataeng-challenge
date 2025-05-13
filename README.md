@@ -1,2 +1,11 @@
 # podemos-progresar-dataeng-challenge
-redshift
+podemos-progresar-dataeng-challenge/
+├── README.md
+├── redshift/
+│   
+├── pyspark/
+│ 
+├── devops/
+
+└── arquitectura-eventos/
+   
