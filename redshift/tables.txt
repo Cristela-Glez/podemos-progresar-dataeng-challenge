@@ -1,0 +1,165 @@
+CREATE TABLE public.clientes_podemos (
+    id_cliente integer NOT NULL ENCODE az64,
+    nombre character varying(256) ENCODE lzo,
+    apellidos character varying(256) ENCODE lzo,
+    curp character varying(256) ENCODE lzo,
+    telefono bigint ENCODE az64,
+    id_region integer ENCODE az64,
+    direccion_detallada character varying(256) ENCODE lzo,
+    fecha_nacimiento date ENCODE az64,
+    estado_civil character varying(256) ENCODE lzo,
+    numero_hijos integer ENCODE az64,
+    ingresos_mensuales real ENCODE raw,
+    id_grupo character varying(256) ENCODE lzo,
+    fecha_ingreso date ENCODE az64,
+    PRIMARY KEY (id_cliente),
+    UNIQUE (id_region)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.creditos_podemos_progresar (
+    id_credito character varying(256) NOT NULL ENCODE lzo,
+    id_cliente integer ENCODE az64,
+    tipo_credito character varying(256) ENCODE lzo,
+    monto_aprobado real ENCODE raw,
+    monto_prestado real ENCODE raw,
+    tasa_interes real ENCODE raw,
+    plazo_credito integer ENCODE az64,
+    fecha_deposito date ENCODE az64,
+    fecha_vencimiento date ENCODE az64,
+    frecuencia_pago character varying(256) ENCODE lzo,
+    estatus character varying(256) ENCODE lzo,
+    saldo_capital real ENCODE raw,
+    saldo_interes real ENCODE raw,
+    dias_mora integer ENCODE az64,
+    id_ejecutivo character varying(256) ENCODE lzo,
+    PRIMARY KEY (id_credito),
+    UNIQUE (id_cliente)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.ejecutivos_podemos (
+    id_ejecutivo character varying(256) NOT NULL ENCODE lzo,
+    nombre_completo character varying(256) ENCODE lzo,
+    tipo_contrato character varying(256) ENCODE lzo,
+    fecha_ingreso date ENCODE az64,
+    id_region integer NOT NULL ENCODE az64,
+    correo character varying(256) ENCODE lzo,
+    telefono bigint ENCODE az64,
+    cartera_asignada real ENCODE raw,
+    estatus character varying(256) ENCODE lzo,
+    PRIMARY KEY (id_ejecutivo)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.jerarquia_cliente (
+    id_jerarquia character varying(256) NOT NULL ENCODE lzo,
+    tipo_grupo character varying(256) ENCODE lzo,
+    id_cliente integer ENCODE az64,
+    fecha_creacion date ENCODE az64,
+    id_grupo character varying(256) ENCODE lzo,
+    id_region integer ENCODE az64,
+    estatus character varying(256) ENCODE lzo,
+    PRIMARY KEY (id_jerarquia),
+    UNIQUE (id_cliente),
+    UNIQUE (id_grupo),
+    UNIQUE (id_region)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.regiones_podemos_progresar (
+    id_region integer NOT NULL ENCODE az64,
+    nombre_region character varying(256) ENCODE lzo,
+    tipo_region character varying(256) ENCODE lzo,
+    pais character varying(256) ENCODE lzo,
+    zona_riesgo character varying(256) ENCODE lzo,
+    tasa_morosidad real ENCODE raw,
+    es_rural boolean ENCODE raw,
+    PRIMARY KEY (id_region)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.saldos_podemos_progresar (
+    id_credito character varying(256) ENCODE lzo,
+    id_cuenta integer ENCODE az64,
+    id_grupo character varying(256) ENCODE lzo,
+    fecha_corte date ENCODE az64,
+    fecha_pago date ENCODE az64,
+    saldo_capital real ENCODE raw,
+    saldo_interes real ENCODE raw,
+    dias_mora integer ENCODE az64,
+    clasificacion_mora character varying(256) ENCODE lzo,
+    estatus_credito character varying(256) ENCODE lzo,
+    id_ejecutivo character varying(256) ENCODE lzo,
+    fecha_proximo_pago date ENCODE az64,
+    monto_proximo_pago real ENCODE raw,
+    UNIQUE (id_credito),
+    UNIQUE (id_cuenta),
+    UNIQUE (id_grupo)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.solicitudes_credito (
+    id_solicitud character varying(256) NOT NULL ENCODE lzo,
+    id_cliente integer NOT NULL ENCODE az64,
+    id_grupo character varying(256) NOT NULL ENCODE lzo,
+    id_ejecutivo character varying(256) NOT NULL ENCODE lzo,
+    fecha_solicitud date ENCODE az64,
+    fecha_estatus date ENCODE az64,
+    monto_solicitado integer ENCODE az64,
+    monto_aprobado integer ENCODE az64,
+    plazo_solicitado integer ENCODE az64,
+    plazo_aprobado integer ENCODE az64,
+    tipo_credito character varying(256) ENCODE lzo,
+    tasa_interes real ENCODE raw,
+    frecuencia_pago character varying(256) ENCODE lzo,
+    motivo_rechazo character varying(256) ENCODE lzo,
+    score_credito integer ENCODE az64,
+    garantias character varying(256) ENCODE lzo,
+    documentos_identidad boolean ENCODE raw,
+    comentarios character varying(256) ENCODE lzo,
+    id_credito character varying(256) NOT NULL ENCODE lzo,
+    estado character varying(256) ENCODE lzo,
+    PRIMARY KEY (id_solicitud)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.solicitudes_podemos (
+    id_solicitud character varying(256) NOT NULL ENCODE lzo,
+    id_cliente integer NOT NULL ENCODE az64,
+    id_grupo character varying(256) NOT NULL ENCODE lzo,
+    id_ejecutivo character varying(256) NOT NULL ENCODE lzo,
+    fecha_solicitud timestamp without time zone ENCODE az64,
+    fecha_estatus timestamp without time zone ENCODE az64,
+    monto_solicitado real ENCODE raw,
+    monto_aprobado real ENCODE raw,
+    plazo_solicitado integer ENCODE az64,
+    plazo_aprobado integer ENCODE az64,
+    tipo_credito character varying(256) ENCODE lzo,
+    tasa_interes real ENCODE raw,
+    frecuencia_pago character varying(256) ENCODE lzo,
+    motivo_rechazo character varying(256) ENCODE lzo,
+    score_credito integer ENCODE az64,
+    garantias character varying(256) ENCODE lzo,
+    documentos_identidad boolean ENCODE raw,
+    comentarios character varying(256) ENCODE lzo,
+    id_credito character varying(256) NOT NULL ENCODE lzo,
+    estado character varying(256) ENCODE lzo,
+    PRIMARY KEY (id_solicitud)
+) DISTSTYLE AUTO;
+
+CREATE TABLE public.transacciones_pagos_podemos (
+    id_transaccion character varying(256) NOT NULL ENCODE lzo,
+    id_credito character varying(256) ENCODE lzo,
+    id_cliente integer NOT NULL ENCODE az64,
+    id_grupo character varying(256) NOT NULL ENCODE lzo,
+    id_ejecutivo character varying(256) ENCODE lzo,
+    fecha_transaccion timestamp without time zone ENCODE az64,
+    fecha_abono date ENCODE az64,
+    canal_pago character varying(256) ENCODE lzo,
+    tipo_pago character varying(256) ENCODE lzo,
+    monto_total real ENCODE raw,
+    capital real ENCODE raw,
+    interes real ENCODE raw,
+    mora real ENCODE raw,
+    comision real ENCODE raw,
+    saldo_anterior_capital real ENCODE raw,
+    saldo_nuevo_capital real ENCODE raw,
+    referencia_pago character varying(256) ENCODE lzo,
+    estatus character varying(256) ENCODE lzo,
+    PRIMARY KEY (id_transaccion),
+    UNIQUE (id_ejecutivo)
+) DISTSTYLE AUTO;
